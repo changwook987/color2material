@@ -18,9 +18,11 @@ object Picture2Material {
     }
 
     private fun getNearbyColorMaterial(color: Color): Material {
+        if (color.alpha == 0) return Material.AIR
+
         return plugin.colorPalette.minByOrNull {
             it.first.run {
-                (color.red - red).absoluteValue + (color.green - green).absoluteValue + (color.blue - blue).absoluteValue
+                (color.red - red).absoluteValue + (color.green - green).absoluteValue + (color.blue - blue).absoluteValue + (color.alpha - alpha).absoluteValue
             }
         }!!.second
     }
@@ -38,9 +40,10 @@ object Picture2Material {
         class DrawRow(val z: Int) : BukkitRunnable() {
             override fun run() {
                 repeat(w) { x ->
-                    Location(location.world, location.x + x, location.y, location.z + z).block.setType(
-                        getNearbyColorMaterial(Color(bufferedImage.getRGB(x, z))),
-                        false)
+                    val color = Color(bufferedImage.getRGB(x, z), true)
+                    val material = getNearbyColorMaterial(color)
+
+                    Location(location.world, location.x + x, location.y, location.z + z).block.setType(material, false)
                 }
             }
         }

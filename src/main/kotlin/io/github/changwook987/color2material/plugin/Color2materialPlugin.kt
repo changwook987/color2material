@@ -13,7 +13,11 @@ class Color2materialPlugin : JavaPlugin() {
 
     override fun onEnable() {
         val pictureFolder = File(dataFolder, "pictures")
-        val pictures = pictureFolder.listFiles { it -> it.name.endsWith(".jpg") }?.filterNotNull() ?: emptyList()
+        pictureFolder.mkdir()
+
+        val pictures = pictureFolder.listFiles { it ->
+            it.name.endsWith(".jpg") || it.name.endsWith(".png")
+        }?.filterNotNull() ?: emptyList()
 
         paletteInit()
         Picture2Material.init(this)
@@ -46,6 +50,7 @@ class Color2materialPlugin : JavaPlugin() {
 
     private fun paletteInit() {
         val texturesFolder = File(dataFolder, "textures")
+        texturesFolder.mkdir()
 
         val textures = texturesFolder.listFiles { it -> it.name.endsWith(".png") }?.filterNotNull() ?: emptyList()
 
